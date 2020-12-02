@@ -25,19 +25,23 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get("/api/timestamp/:date?", (req, res) => {
-  const { date } = req.params;
-  
+  let { date } = req.params;
   let dateObj = null;
-  if(date == undefined) { dateObj = new Date(); }
-  else { dateObj = new Date(date); }
 
+  if(new Date(date) != 'Invalid Date') {
+    dateObj = new Date(date);
+  } else {
+    if(date == undefined) { dateObj = new Date(); }
+    else { dateObj = new Date(date * 1); }
+  }
+
+  
   if(dateObj != 'Invalid Date'){
     res.json({ 
-      unix: dateObj.getTime(), 
+      unix: dateObj.valueOf(), 
       utc: dateObj.toUTCString()
     });
-  }
-  else {
+  } else {
     res.json({ error: "Invalid Date" });
   }
 
